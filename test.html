@@ -1,0 +1,1847 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MASSUK Registration</title>
+    <style>
+      :root {
+        --navy: #0e1a3d;
+        --navy-deep: #0a1330;
+        --purple: #7a2fc9;
+        --purple-light: #9b4fe8;
+        --purple-pale: #f3ebfb;
+        --text: #29304a;
+        --muted: #6b7286;
+        --bg: #f6f5fa;
+        --card: #ffffff;
+        --border: #e3e1ee;
+        --green: #1f8a4c;
+        --green-pale: #eaf7ef;
+        --amber: #a8710a;
+        --amber-pale: #fdf3e2;
+        --red: #d34747;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+      a {
+        color: inherit;
+      }
+
+      .choice-section {
+        padding: 64px 24px 20px;
+      }
+      .step-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--purple);
+        margin-bottom: 28px;
+      }
+      .step-label .num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--purple);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+      .choice-grid {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+      .choice-card {
+        background: #fff;
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        padding: 30px 26px;
+        cursor: pointer;
+        transition:
+          border-color 0.18s ease,
+          box-shadow 0.18s ease,
+          transform 0.18s ease;
+        position: relative;
+      }
+      .choice-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 18px 34px -20px rgba(14, 26, 61, 0.25);
+      }
+      .choice-card.selected {
+        border-color: var(--purple);
+        box-shadow: 0 18px 34px -20px rgba(122, 47, 201, 0.35);
+      }
+      .choice-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, var(--purple), var(--navy));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .choice-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .choice-card h3 {
+        font-size: 18px;
+        color: var(--navy);
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .choice-card p {
+        font-size: 13.5px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0 0 16px;
+      }
+      .choice-radio {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--navy);
+      }
+      .choice-radio .dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        position: relative;
+        flex: 0 0 18px;
+      }
+      .choice-card.selected .choice-radio .dot {
+        border-color: var(--purple);
+      }
+      .choice-card.selected .choice-radio .dot::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        background: var(--purple);
+      }
+      @media (max-width: 700px) {
+        .choice-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ===== FORM LAYOUT ===== */
+      .form-section {
+        padding: 60px 0px 96px;
+        background: #fff;
+        display: none;
+      }
+      .form-section.visible {
+        display: block;
+      }
+      .form-grid {
+        max-width: 1160px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 34px 15px;
+        box-shadow: 0 20px 45px -32px rgba(14, 26, 61, 0.25);
+      }
+      .form-card h2.group-title {
+        font-size: 16px;
+        color: var(--purple);
+        font-weight: 700;
+        margin: 32px 0 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .form-card h2.group-title:first-child {
+        margin-top: 0;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+      .field-row.three {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+      .field label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--navy);
+      }
+      .field label .req {
+        color: var(--red);
+        margin-left: 2px;
+      }
+      .field input[type="text"],
+      .field input[type="email"],
+      .field input[type="tel"],
+      .field input[type="number"],
+      .field input[type="date"],
+      .field select,
+      .field textarea {
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        padding: 11px 13px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fbfaff;
+        width: 100%;
+      }
+
+      .field textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        outline: none;
+        border-color: var(--purple);
+        background: #fff;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 640px) {
+        .field-row,
+        .field-row.three {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* yes/no toggle */
+      .yn {
+        display: flex;
+        gap: 10px;
+      }
+      .yn label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 9px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .yn input {
+        accent-color: var(--purple);
+      }
+      .yn label:has(input:checked) {
+        border-color: var(--purple);
+        background: var(--purple-pale);
+        color: var(--purple);
+      }
+
+      .reveal {
+        display: none;
+        margin-top: 12px;
+      }
+      .reveal.open {
+        display: block;
+      }
+
+      .checkline {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13.5px;
+        color: var(--text);
+        margin-bottom: 14px;
+        line-height: 1.5;
+      }
+      .checkline input {
+        margin-top: 3px;
+        accent-color: var(--purple);
+        flex: 0 0 auto;
+      }
+      .checkline .req {
+        color: var(--red);
+      }
+
+      .note-box {
+        background: var(--purple-pale);
+        border: 1px solid #e5d3fb;
+        border-radius: 12px;
+        padding: 16px 18px;
+        font-size: 13px;
+        color: var(--navy);
+        line-height: 1.65;
+        margin: 14px 0 22px;
+      }
+      .note-box strong {
+        color: var(--purple);
+      }
+      .note-box.amber {
+        background: var(--amber-pale);
+        border-color: #f3dfab;
+        color: #5f4207;
+      }
+      .note-box.amber strong {
+        color: var(--amber);
+      }
+
+      .session-block {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 18px 6px;
+        margin-bottom: 16px;
+        background: #fbfaff;
+      }
+      .session-block h4 {
+        font-size: 14.5px;
+        color: var(--navy);
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+      .session-options {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .session-options label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #fff;
+      }
+      .session-options input {
+        accent-color: var(--purple);
+      }
+      .session-options label:has(input:checked) {
+        border-color: var(--purple);
+        background: var(--purple-pale);
+        color: var(--purple);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 14px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        justify-content: center;
+        background: var(--purple);
+        color: #fff;
+        transition:
+          background 0.18s ease,
+          transform 0.18s ease;
+        margin-top: 6px;
+      }
+      .btn:hover {
+        background: var(--purple-light);
+        transform: translateY(-2px);
+      }
+      .btn:disabled {
+        background: #c9c3d6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* ===== SIDEBAR ===== */
+      .side-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 26px;
+        margin-bottom: 20px;
+        box-shadow: 0 20px 45px -32px rgba(14, 26, 61, 0.2);
+      }
+      .side-card h3 {
+        font-size: 16px;
+        color: var(--navy);
+        margin-bottom: 14px;
+        font-weight: 700;
+      }
+      .side-row {
+        display: flex;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid var(--border);
+      }
+      .side-row:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      .side-icon {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--green-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .side-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--green);
+        fill: none;
+        stroke-width: 2.4;
+      }
+      .side-row p {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.55;
+      }
+      .side-row strong {
+        display: block;
+        color: var(--navy);
+        font-size: 13.5px;
+        margin-bottom: 2px;
+      }
+
+      .payment-card {
+        background: linear-gradient(
+          135deg,
+          var(--navy-deep),
+          var(--navy) 70%,
+          var(--purple)
+        );
+        border-radius: 16px;
+        padding: 26px;
+        color: #fff;
+      }
+      .payment-card h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #fff;
+        font-weight: 700;
+      }
+      .payment-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 196, 0, 0.18);
+        border: 1px solid rgba(255, 196, 0, 0.4);
+        color: #ffd873;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+        letter-spacing: 0.02em;
+      }
+      .payment-status .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ffd873;
+      }
+      .payment-status.payment-ready {
+        background: rgba(56, 201, 122, 0.18);
+        border-color: rgba(56, 201, 122, 0.45);
+        color: #8dffb8;
+      }
+      .payment-status.payment-ready .dot {
+        background: #8dffb8;
+      }
+      .price-line {
+        font-size: 14px !important;
+        color: #fff !important;
+        margin-bottom: 12px !important;
+      }
+      .price-line strong {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .form-error {
+        color: var(--red);
+        font-size: 13.5px;
+        font-weight: 600;
+        margin: 14px 0 0;
+        line-height: 1.45;
+      }
+
+      /* ===== Payment result modals ===== */
+      .muk-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 19, 48, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 24px;
+      }
+      .muk-modal-overlay.open {
+        display: flex;
+      }
+      .muk-modal {
+        background: #fff;
+        border-radius: 16px;
+        max-width: 420px;
+        width: 100%;
+        padding: 32px 28px 26px;
+        box-shadow: 0 28px 60px -28px rgba(14, 26, 61, 0.45);
+        text-align: center;
+      }
+      .muk-modal-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .muk-modal-icon svg {
+        width: 26px;
+        height: 26px;
+        fill: none;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .muk-modal-icon.success {
+        background: var(--green-pale);
+      }
+      .muk-modal-icon.success svg {
+        stroke: var(--green);
+      }
+      .muk-modal-icon.fail {
+        background: var(--amber-pale);
+      }
+      .muk-modal-icon.fail svg {
+        stroke: var(--amber);
+      }
+      .muk-modal h3 {
+        font-size: 20px;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      .muk-modal p {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin: 0 0 22px;
+      }
+      .muk-modal .btn {
+        width: auto;
+        min-width: 140px;
+        display: inline-flex;
+        margin-top: 0;
+      }
+      .payment-card p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.6;
+        margin: 0 0 10px;
+      }
+      .payment-help {
+        margin-top: 14px;
+      }
+      .payment-help strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+      .payment-help a {
+        color: #fff;
+        text-decoration: underline;
+      }
+      .contact-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #fff;
+        margin-top: 14px;
+      }
+      .contact-line svg {
+        width: 15px;
+        height: 15px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+      }
+
+      /* ===== dev / client notes (visible in build file only — strip or hide before go-live) ===== */
+      .dev-note {
+        max-width: 1160px;
+        margin: 0 auto 40px;
+        padding: 16px 20px;
+        background: #fff7ec;
+        border: 1px dashed #e8c98a;
+        border-radius: 10px;
+        font-size: 12.5px;
+        color: #6b4d10;
+        line-height: 1.6;
+      }
+      .dev-note strong {
+        color: #8a5b00;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ CHOICE SECTION ============ -->
+    <section class="choice-section">
+      <div class="wrap">
+        <div class="step-label">
+          <span class="num">1</span> Choose your registration
+        </div>
+        <p id="intro-text" style="text-align: center; margin: -14px 0 28px; color: var(--muted)">
+          The Symposium and Karate Training &amp; Development Camp are booked separately.
+        </p>
+        <div class="choice-grid">
+          <div
+            class="choice-card"
+            id="card-symposium"
+            onclick="selectType('symposium')"
+          >
+            <div class="choice-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 3h6l1 4H8l1-4Z" />
+                <path d="M7 7h10l-1 12a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2L7 7Z" />
+              </svg>
+            </div>
+            <h3>Register for the Symposium</h3>
+            <p>
+              One-day medical education symposium for clinicians, allied health
+              professionals, coaches and athletes.
+            </p>
+            <div class="choice-radio">
+              <span class="dot"></span> Select Symposium
+            </div>
+          </div>
+
+          <div class="choice-card" id="card-camp" onclick="selectType('camp')">
+            <div class="choice-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M13 2 3 14h7l-1 8 11-14h-7l0-6Z" />
+              </svg>
+            </div>
+            <h3>Register for the Karate Training Camp</h3>
+            <p>
+              Live Kata and Kumite training sessions.
+            </p>
+            <div class="choice-radio">
+              <span class="dot"></span> Select Training Camp
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SYMPOSIUM FORM (6.3) ============ -->
+    <section class="form-section" id="form-symposium">
+      <div class="wrap">
+        <div class="step-label">
+          <span class="num">2</span> Symposium registration details
+        </div>
+        <div class="form-grid">
+          <form
+            class="form-card"
+            onsubmit="return handleSubmit(event, 'symposium');"
+          >
+            <h2 class="group-title">Delegate Information</h2>
+            <div class="field">
+              <label>Title</label>
+              <select name="title">
+                <option>Select</option>
+                <option>Mr</option>
+                <option>Mrs</option>
+                <option>Ms</option>
+                <option>Mx</option>
+                <option>Dr</option>
+                <option>Prof</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>First Name <span class="req">*</span></label
+                ><input
+                  type="text"
+                  name="first_name"
+                  id="sym-first-name"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label>Last Name <span class="req">*</span></label
+                ><input
+                  type="text"
+                  name="last_name"
+                  id="sym-last-name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Organisation / Affiliation</label
+                ><input type="text" name="organisation" />
+              </div>
+              <div class="field">
+                <label>Job Title</label><input type="text" name="job_title" />
+              </div>
+            </div>
+
+            <h2 class="group-title">Contact Information</h2>
+            <div class="field-row">
+              <div class="field">
+                <label>Email Address <span class="req">*</span></label
+                ><input type="email" name="email" id="sym-email" required />
+              </div>
+              <div class="field">
+                <label>Phone Number <span class="req">*</span></label
+                ><input type="tel" name="phone" id="sym-phone" required />
+              </div>
+            </div>
+            <div class="field"><label>Address</label><textarea name="address"></textarea></div>
+            <div class="field-row three">
+              <div class="field"><label>City</label><input type="text" name="city" /></div>
+              <div class="field">
+                <label>Post Code <span class="req">*</span></label
+                ><input type="text" name="postcode" required />
+              </div>
+              <div class="field">
+                <label>Country <span class="req">*</span></label>
+                <select name="country" required>
+                  <option value="">Select</option>
+                  <option>United Kingdom</option>
+                  <option>Ireland</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <h2 class="group-title">Additional Information</h2>
+            <div class="field">
+              <label>Dietary Requirements</label>
+              <select
+                name="dietary"
+                id="sym-dietary"
+                onchange="
+                  toggleReveal('sym-dietary', 'sym-dietary-other', 'Other')
+                "
+              >
+                <option>None</option>
+                <option>Vegetarian</option>
+                <option>Vegan</option>
+                <option>Halal</option>
+                <option>Kosher</option>
+                <option>Gluten-free</option>
+                <option>Dairy-free</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field reveal" id="sym-dietary-other">
+              <label>Other Dietary Requirements</label
+              ><textarea name="dietary_other" placeholder="Please specify"></textarea>
+            </div>
+            <div class="field">
+              <label>Access Requirements</label
+              ><textarea
+                name="access_requirements"
+                placeholder="Let us know how we can support you on the day"
+              ></textarea>
+            </div>
+
+            <h2 class="group-title">Optional Activities</h2>
+            <div class="field">
+              <label
+                >I want to participate in a tour of the training camps?</label
+              >
+              <div class="yn">
+                <label
+                  ><input type="radio" name="tour" value="yes" /> Yes</label
+                >
+                <label
+                  ><input type="radio" name="tour" value="no" checked />
+                  No</label
+                >
+              </div>
+            </div>
+            <div class="field">
+              <label>I want to participate in the Stunt Workshop?</label>
+              <div class="yn">
+                <label
+                  ><input type="radio" name="stunt" value="yes" /> Yes</label
+                >
+                <label
+                  ><input type="radio" name="stunt" value="no" checked />
+                  No</label
+                >
+              </div>
+            </div>
+
+            <div id="sym-promo-section">
+              <h2 class="group-title">Promo code</h2>
+              <div class="field">
+                <label>Have a promo code? (optional)</label>
+                <input
+                  type="text"
+                  name="promo_code"
+                  id="sym-promo"
+                  placeholder="Enter code"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <h2 class="group-title">Consent</h2>
+            <label class="checkline"
+              ><input type="checkbox" name="marketing_consent" value="true" /> I would like to receive future updates
+              from MASSUK.</label
+            >
+            <label class="checkline"
+              ><input type="checkbox" name="terms_agreed" value="true" required /> I agree to the terms and
+              conditions <span class="req">*</span></label
+            >
+
+            <button type="submit" class="btn">Continue to Payment</button>
+          </form>
+
+          <div>
+            <div class="side-card">
+              <h3>Registration Includes</h3>
+
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Full symposium access</strong>All sessions, conference
+                  materials, lunch and refreshments.
+                </p>
+              </div>
+
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Optional Tour</strong>Optional tour of Karate Training
+                  &amp; Development Camp.
+                </p>
+              </div>
+
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Stunt Workshop</strong>Participation / Observation of
+                  Stunt Workshop.
+                </p>
+              </div>
+
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Confirmation email</strong>Sent within 24 hours of
+                  successful registration.
+                </p>
+              </div>
+            </div>
+
+            <div class="payment-card">
+              <span class="payment-status payment-ready"
+                ><span class="dot"></span> Secure Stripe Checkout</span
+              >
+              <h3>Payment</h3>
+              <p class="price-line">
+                Symposium registration:
+                <strong id="sym-price-label">Loading…</strong>
+              </p>
+              <p id="sym-tier-label" style="opacity: 0.9">
+                Loading registration price…
+              </p>
+              <p id="sym-seats-label" style="opacity: 0.9"></p>
+              <p id="sym-stripe-note">
+                After you submit, you will be redirected to Stripe to pay
+                securely. Your card details never touch this page.
+              </p>
+              <div class="payment-help">
+                <strong>Questions?</strong>
+                <p>
+                  Email us at:
+                  <a href="mailto:contact@massuk.co.uk">contact@massuk.co.uk</a>
+                </p>
+                <p>We will get back to you within 24 hours.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRAINING CAMP FORM (6.4 / 6.5) ============ -->
+    <section class="form-section" id="form-camp">
+      <div class="wrap">
+        <div class="step-label">
+          <span class="num">2</span> Training camp registration details
+        </div>
+        <div class="form-grid">
+          <form
+            class="form-card"
+            onsubmit="return handleSubmit(event, 'camp');"
+          >
+            <h2 class="group-title">Participant Information</h2>
+            <div class="field">
+              <label>Title</label>
+              <select name="title">
+                <option>Select</option>
+                <option>Mr</option>
+                <option>Mrs</option>
+                <option>Ms</option>
+                <option>Mx</option>
+                <option>Master</option>
+                <option>Miss</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>First Name <span class="req">*</span></label
+                ><input
+                  type="text"
+                  name="first_name"
+                  id="camp-first-name"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label>Last Name <span class="req">*</span></label
+                ><input
+                  type="text"
+                  name="last_name"
+                  id="camp-last-name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Age <span class="req">*</span></label>
+                <input
+                  type="number"
+                  name="age"
+                  id="camp-age"
+                  min="0"
+                  max="120"
+                  required
+                  oninput="handleAgeChange()"
+                />
+              </div>
+              <div class="field">
+                <label>Date of Birth <span class="req">*</span></label
+                ><input
+                  type="date"
+                  name="date_of_birth"
+                  id="camp-dob"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="note-box amber" id="under18-note" style="display: none">
+              <strong>Participant is under 18.</strong> Please provide contact
+              details for two parents/guardians below in place of the
+              participant's own contact details.
+            </div>
+
+            <h2 class="group-title">Contact Information</h2>
+            <div class="field-row" id="adult-contact">
+              <div class="field">
+                <label>Email Address <span class="req">*</span></label
+                ><input type="email" name="email" id="camp-email" />
+              </div>
+              <div class="field">
+                <label>Phone Number <span class="req">*</span></label
+                ><input type="tel" name="phone" id="camp-phone" />
+              </div>
+            </div>
+
+            <div id="guardian-contact" style="display: none">
+              <div class="field-row">
+                <div class="field">
+                  <label
+                    >Parent/Guardian 1 — Email <span class="req">*</span></label
+                  ><input
+                    type="email"
+                    name="guardian1_email"
+                    id="camp-g1-email"
+                  />
+                </div>
+                <div class="field">
+                  <label
+                    >Parent/Guardian 1 — Phone <span class="req">*</span></label
+                  ><input
+                    type="tel"
+                    name="guardian1_phone"
+                    id="camp-g1-phone"
+                  />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>Parent/Guardian 2 — Email</label
+                  ><input
+                    type="email"
+                    name="guardian2_email"
+                    id="camp-g2-email"
+                  />
+                </div>
+                <div class="field">
+                  <label>Parent/Guardian 2 — Phone</label
+                  ><input
+                    type="tel"
+                    name="guardian2_phone"
+                    id="camp-g2-phone"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <h2 class="group-title">Emergency Contact</h2>
+            <div class="field-row three">
+              <div class="field">
+                <label>Name <span class="req">*</span></label
+                ><input type="text" name="emergency_name" required />
+              </div>
+              <div class="field">
+                <label>Contact Number <span class="req">*</span></label
+                ><input type="tel" name="emergency_phone" required />
+              </div>
+              <div class="field">
+                <label>Relationship <span class="req">*</span></label
+                ><input type="text" name="emergency_relationship" required />
+              </div>
+            </div>
+
+            <h2 class="group-title">Address</h2>
+            <div class="field"><label>Address</label><textarea name="address"></textarea></div>
+            <div class="field-row three">
+              <div class="field"><label>City</label><input type="text" name="city" /></div>
+              <div class="field">
+                <label>Post Code <span class="req">*</span></label
+                ><input type="text" name="postcode" required />
+              </div>
+              <div class="field">
+                <label>Country <span class="req">*</span></label>
+                <select name="country" required>
+                  <option value="">Select</option>
+                  <option>United Kingdom</option>
+                  <option>Ireland</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <h2 class="group-title">Health &amp; Support Information</h2>
+
+            <div class="field">
+              <label>Medical Conditions</label>
+              <div class="yn">
+                <label
+                  ><input
+                    type="radio"
+                    name="medical"
+                    value="yes"
+                    onclick="toggleYN('medical-details', true)"
+                  />
+                  Yes</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="medical"
+                    value="no"
+                    checked
+                    onclick="toggleYN('medical-details', false)"
+                  />
+                  No</label
+                >
+              </div>
+              <div class="reveal" id="medical-details">
+                <textarea name="medical_details" placeholder="Please provide details"></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>SEN (Special Educational Needs)</label>
+              <div class="yn">
+                <label
+                  ><input
+                    type="radio"
+                    name="sen"
+                    value="yes"
+                    onclick="toggleYN('sen-details', true)"
+                  />
+                  Yes</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="sen"
+                    value="no"
+                    checked
+                    onclick="toggleYN('sen-details', false)"
+                  />
+                  No</label
+                >
+              </div>
+              <div class="reveal" id="sen-details">
+                <textarea name="sen_details" placeholder="Please provide details"></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Access Requirements</label>
+              <div class="yn">
+                <label
+                  ><input
+                    type="radio"
+                    name="access"
+                    value="yes"
+                    onclick="toggleYN('access-details', true)"
+                  />
+                  Yes</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="access"
+                    value="no"
+                    checked
+                    onclick="toggleYN('access-details', false)"
+                  />
+                  No</label
+                >
+              </div>
+              <div class="reveal" id="access-details">
+                <textarea name="access_details" placeholder="Please provide details"></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Any Other Additional Support</label>
+              <div class="yn">
+                <label
+                  ><input
+                    type="radio"
+                    name="othersupport"
+                    value="yes"
+                    onclick="toggleYN('othersupport-details', true)"
+                  />
+                  Yes</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="othersupport"
+                    value="no"
+                    checked
+                    onclick="toggleYN('othersupport-details', false)"
+                  />
+                  No</label
+                >
+              </div>
+              <div class="reveal" id="othersupport-details">
+                <textarea name="othersupport_details" placeholder="Please provide details"></textarea>
+              </div>
+            </div>
+
+            <h2 class="group-title">Training Camp Session Selection</h2>
+
+            <div class="session-block">
+              <h4>Morning Session (2 hours)</h4>
+              <div class="session-options">
+                <label
+                  ><input
+                    type="radio"
+                    name="morning"
+                    value="kata"
+                    onclick="checkKumite()"
+                    required
+                  />
+                  Kata</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="morning"
+                    value="kumite"
+                    onclick="checkKumite()"
+                  />
+                  Kumite</label
+                >
+              </div>
+            </div>
+
+            <div class="session-block">
+              <h4>Afternoon Session (2 hours)</h4>
+              <div class="session-options">
+                <label
+                  ><input
+                    type="radio"
+                    name="afternoon"
+                    value="kata"
+                    onclick="checkKumite()"
+                    required
+                  />
+                  Kata</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="afternoon"
+                    value="kumite"
+                    onclick="checkKumite()"
+                  />
+                  Kumite</label
+                >
+              </div>
+            </div>
+
+            <div class="note-box" id="sparring-note" style="display: none">
+              <strong>Kumite selected — sparring kit required.</strong> If you
+              sign up to attend the Kumite session, you must bring your sparring
+              kit including hand mitts/gloves, leg pads/insteps, mouthguard,
+              groin guard and headguard. Chest/bodyguard is preferable. If you
+              do not bring the required sparring kit, you may not be able to
+              fully participate. If you do not have a sparring kit, please
+              contact us at contact@massuk.co.uk.
+            </div>
+            <label class="checkline" id="sparring-check" style="display: none">
+              <input type="checkbox" id="sparring-ack" name="sparring_kit_ack" value="true" /> I confirm I will bring
+              the required sparring kit for the Kumite session.
+              <span class="req">*</span>
+            </label>
+
+            <div class="note-box">
+              <strong>Note on session allocation.</strong> We will endeavour to
+              honour your session selection. Due to the safety of all
+              participants, MASSUK reserves the right to move session allocation
+              around.
+            </div>
+
+            <div class="note-box amber">
+              <strong>Under 18s.</strong> Parent/guardians should register their
+              child/ren at the Training Camp Registration desk prior to leaving.
+              You are welcome to join the Q&amp;A session, photographs and
+              autographs at the end of the training camp day.
+            </div>
+
+            <h2 class="group-title">Promo code</h2>
+            <div class="field">
+              <label>Have a promo code? (optional)</label>
+              <input
+                type="text"
+                name="promo_code"
+                id="camp-promo"
+                placeholder="Enter code"
+                autocomplete="off"
+              />
+            </div>
+
+            <h2 class="group-title">Consent</h2>
+            <label class="checkline"
+              ><input type="checkbox" name="marketing_consent" value="true" /> I would like to receive updates about
+              future MASSUK training camps and meetings.</label
+            >
+            <label class="checkline"
+              ><input type="checkbox" name="terms_agreed" value="true" required /> I agree to the terms and
+              conditions <span class="req">*</span></label
+            >
+
+            <button type="submit" class="btn">Continue to Payment</button>
+          </form>
+
+          <div>
+            <div class="side-card">
+              <h3>Before You Register</h3>
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Sparring kit</strong>Required for Kumite: gloves, leg
+                  pads, mouthguard, groin guard, headguard.<br /><br /><em
+                    >Not required if you only select Kata.</em
+                  >
+                </p>
+              </div>
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Under 18s</strong>Register at the desk on the day;
+                  parents welcome at the closing Q&amp;A.
+                </p>
+              </div>
+              <div class="side-row">
+                <div class="side-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </div>
+                <p>
+                  <strong>Confirmation email</strong>Karate Training &amp;
+                  Development Camp confirmation sent following registration.
+                </p>
+              </div>
+            </div>
+
+            <div class="payment-card">
+              <span class="payment-status payment-ready"
+                ><span class="dot"></span> Secure Stripe Checkout</span
+              >
+              <h3>Payment</h3>
+              <p class="price-line">
+                Training camp registration:
+                <strong id="camp-price-label">Loading…</strong>
+              </p>
+              <p id="camp-tier-label" style="opacity: 0.9">
+                Loading registration price…
+              </p>
+              <p id="camp-seats-label" style="opacity: 0.9"></p>
+              <p id="camp-stripe-note">
+                After you submit, you will be redirected to Stripe to pay
+                securely. Your card details never touch this page.
+              </p>
+
+              <div class="payment-help">
+                <strong>Questions?</strong>
+                <p>
+                  Email us at:
+                  <a href="mailto:contact@massuk.co.uk">contact@massuk.co.uk</a>
+                </p>
+                <p>We will get back to you within 24 hours.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success / Cancel modals (opened from ?payment= or ?muk= URL params) -->
+    <div
+      class="muk-modal-overlay"
+      id="modal-success"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-title"
+    >
+      <div class="muk-modal">
+        <div class="muk-modal-icon success">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+        </div>
+        <h3 id="success-title">Payment successful</h3>
+        <p>
+          Thank you — your registration payment was received. A confirmation
+          email will follow shortly. If you need help, contact
+          contact@massuk.co.uk.
+        </p>
+        <button
+          type="button"
+          class="btn"
+          onclick="closeMukModal('modal-success')"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="muk-modal-overlay"
+      id="modal-fail"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fail-title"
+    >
+      <div class="muk-modal">
+        <div class="muk-modal-icon fail">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8v5" />
+            <path d="M12 16h.01" />
+          </svg>
+        </div>
+        <h3 id="fail-title">Payment cancelled</h3>
+        <p>
+          Your payment was cancelled or not completed. No charge was made. You
+          can submit the form again when you are ready to pay.
+        </p>
+        <button type="button" class="btn" onclick="closeMukModal('modal-fail')">
+          Try again
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Set these values when embedding the completed form on the WordPress site.
+      // Do not commit a production API key to a public repository.
+      var MUK_CONFIG = {
+        checkoutUrl:
+          "/wp-json/muk/v1/checkout",
+        confirmUrl:
+          "/wp-json/muk/v1/confirm",
+        availabilityUrl:
+          "/wp-json/muk/v1/availability",
+        configUrl:
+          "/wp-json/muk/v1/config",
+        apiKey: "REPLACE_WITH_PLUGIN_API_KEY",
+        currency: "gbp",
+      };
+
+      var MUK_RUNTIME = { price: { symposium: null, camp: null }, products: {}, copy: {} };
+
+      function getCurrentPrice(type) {
+        var p = MUK_RUNTIME.price && MUK_RUNTIME.price[type];
+        return p || { amount: 0, label: "Loading…", tier: "Loading registration price…", open: false };
+      }
+
+      function selectType(type) {
+        document
+          .getElementById("card-symposium")
+          .classList.toggle("selected", type === "symposium");
+        document
+          .getElementById("card-camp")
+          .classList.toggle("selected", type === "camp");
+        document
+          .getElementById("form-symposium")
+          .classList.toggle("visible", type === "symposium");
+        document
+          .getElementById("form-camp")
+          .classList.toggle("visible", type === "camp");
+        document
+          .getElementById(type === "symposium" ? "form-symposium" : "form-camp")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function toggleReveal(selectId, revealId, matchValue) {
+        var val = document.getElementById(selectId).value;
+        document
+          .getElementById(revealId)
+          .classList.toggle("open", val === matchValue);
+      }
+
+      function toggleYN(revealId, show) {
+        document.getElementById(revealId).classList.toggle("open", show);
+      }
+
+      function handleAgeChange() {
+        var age = parseInt(document.getElementById("camp-age").value, 10);
+        var isMinor = !isNaN(age) && age < 18;
+        document.getElementById("under18-note").style.display = isMinor
+          ? "block"
+          : "none";
+        document.getElementById("adult-contact").style.display = isMinor
+          ? "none"
+          : "grid";
+        document.getElementById("guardian-contact").style.display = isMinor
+          ? "block"
+          : "none";
+        document.getElementById("camp-email").required = !isMinor;
+        document.getElementById("camp-phone").required = !isMinor;
+        document.getElementById("camp-g1-email").required = isMinor;
+        document.getElementById("camp-g1-phone").required = isMinor;
+      }
+
+      function checkKumite() {
+        var morning = document.querySelector('input[name="morning"]:checked');
+        var afternoon = document.querySelector(
+          'input[name="afternoon"]:checked',
+        );
+        var kumiteSelected =
+          (morning && morning.value === "kumite") ||
+          (afternoon && afternoon.value === "kumite");
+        document.getElementById("sparring-note").style.display = kumiteSelected
+          ? "block"
+          : "none";
+        document.getElementById("sparring-check").style.display = kumiteSelected
+          ? "flex"
+          : "none";
+        document.getElementById("sparring-ack").required = kumiteSelected;
+      }
+
+      function getCampEmail() {
+        var age = parseInt(document.getElementById("camp-age").value, 10);
+        var isMinor = !isNaN(age) && age < 18;
+        if (isMinor) {
+          return (document.getElementById("camp-g1-email").value || "").trim();
+        }
+        return (document.getElementById("camp-email").value || "").trim();
+      }
+
+      function buildMetadata(type, form) {
+        var meta = { registration_type: type };
+        if (type === "symposium") {
+          meta.first_name = document.getElementById("sym-first-name").value;
+          meta.last_name = document.getElementById("sym-last-name").value;
+          meta.phone = document.getElementById("sym-phone").value;
+        } else {
+          meta.first_name = document.getElementById("camp-first-name").value;
+          meta.last_name = document.getElementById("camp-last-name").value;
+          meta.age = document.getElementById("camp-age").value;
+          var morning = form.querySelector('input[name="morning"]:checked');
+          var afternoon = form.querySelector(
+            'input[name="afternoon"]:checked',
+          );
+          if (morning) meta.morning_session = morning.value;
+          if (afternoon) meta.afternoon_session = afternoon.value;
+        }
+        return meta;
+      }
+
+      function collectFormData(form) {
+        var data = {};
+        form.querySelectorAll("input, select, textarea").forEach(function (field) {
+          if (!field.name || field.disabled || field.type === "password") return;
+          if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return;
+          data[field.name] = field.value;
+        });
+        return data;
+      }
+
+      function pageBaseUrl() {
+        return window.location.href.split("?")[0].split("#")[0];
+      }
+
+      function setSubmitState(form, loading, message) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (!btn) return;
+        if (!btn.dataset.defaultLabel) {
+          btn.dataset.defaultLabel = btn.textContent;
+        }
+        btn.disabled = !!loading;
+        btn.textContent = loading
+          ? "Redirecting to payment…"
+          : btn.dataset.defaultLabel;
+        var existing = form.querySelector(".form-error");
+        if (existing) existing.remove();
+        if (message) {
+          var err = document.createElement("p");
+          err.className = "form-error";
+          err.textContent = message;
+          btn.insertAdjacentElement("beforebegin", err);
+        }
+      }
+
+      async function handleSubmit(e, type) {
+        e.preventDefault();
+        var form = e.target;
+        var product = MUK_RUNTIME.products[type];
+        var price = getCurrentPrice(type);
+
+        if (!product) {
+          setSubmitState(form, false, "Unknown registration type.");
+          return false;
+        }
+
+        if (!price.open) {
+          setSubmitState(form, false, price.tier);
+          return false;
+        }
+
+        var customerEmail =
+          type === "symposium"
+            ? (document.getElementById("sym-email").value || "").trim()
+            : getCampEmail();
+
+        if (!customerEmail) {
+          setSubmitState(form, false, "Please enter a valid email address.");
+          return false;
+        }
+
+        setSubmitState(form, true);
+
+        var promoInput =
+          type === "symposium"
+            ? document.getElementById("sym-promo")
+            : document.getElementById("camp-promo");
+        var promoCode = promoInput
+          ? (promoInput.value || "").trim()
+          : "";
+
+        var base = pageBaseUrl();
+        var payload = {
+          amount: price.amount,
+          currency: MUK_CONFIG.currency,
+          product_name: product.product_name + " (" + price.label + ")",
+          quantity: 1,
+          customer_email: customerEmail,
+          registration_type: type,
+          success_url: base + "?payment=success",
+          cancel_url: base + "?payment=cancelled",
+          metadata: buildMetadata(type, form),
+          customer_data: collectFormData(form),
+        };
+
+        if (promoCode) {
+          payload.promo_code = promoCode;
+        }
+
+        try {
+          var response = await fetch(MUK_CONFIG.checkoutUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-MUK-API-Key": MUK_CONFIG.apiKey,
+            },
+            body: JSON.stringify(payload),
+          });
+
+          var data = await response.json().catch(function () {
+            return {};
+          });
+
+          if (!response.ok || !data.url) {
+            var msg =
+              (data && data.message) ||
+              "Could not start checkout. Please try again.";
+            setSubmitState(form, false, msg);
+            return false;
+          }
+
+          window.location.href = data.url;
+        } catch (err) {
+          setSubmitState(
+            form,
+            false,
+            "Network error starting checkout. Please try again.",
+          );
+        }
+
+        return false;
+      }
+
+      function closeMukModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove("open");
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, pageBaseUrl());
+        }
+      }
+
+      function openMukModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add("open");
+      }
+
+      async function confirmPaidSession(sessionId) {
+        if (!sessionId) return;
+        try {
+          await fetch(MUK_CONFIG.confirmUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-MUK-API-Key": MUK_CONFIG.apiKey,
+            },
+            body: JSON.stringify({ session_id: sessionId }),
+          });
+        } catch (e) {
+          // Non-blocking: seat count may lag if confirm fails.
+        }
+      }
+
+      function checkPaymentReturn() {
+        var params = new URLSearchParams(window.location.search);
+        var payment = (params.get("payment") || "").toLowerCase();
+        var muk = (params.get("muk") || "").toLowerCase();
+        var sessionId = params.get("session_id") || "";
+
+        if (
+          payment === "success" ||
+          muk === "success" ||
+          payment === "paid"
+        ) {
+          if (sessionId) {
+            confirmPaidSession(sessionId);
+          }
+          openMukModal("modal-success");
+          return;
+        }
+
+        if (
+          payment === "cancelled" ||
+          payment === "canceled" ||
+          payment === "cancel" ||
+          payment === "failed" ||
+          muk === "cancel" ||
+          muk === "cancelled" ||
+          muk === "failed"
+        ) {
+          openMukModal("modal-fail");
+        }
+      }
+
+      function updatePriceLabels() {
+        [
+          { prefix: "sym", type: "symposium" },
+          { prefix: "camp", type: "camp" },
+        ].forEach(function (form) {
+          var price = getCurrentPrice(form.type);
+          var priceEl = document.getElementById(form.prefix + "-price-label");
+          var tierEl = document.getElementById(form.prefix + "-tier-label");
+          if (priceEl) priceEl.textContent = price.label;
+          if (tierEl) tierEl.textContent = price.tier;
+
+          document.querySelectorAll("form.form-card").forEach(function (el) {
+            var onsubmit = el.getAttribute("onsubmit") || "";
+            if (onsubmit.indexOf("'" + form.type + "'") === -1) return;
+            var btn = el.querySelector('button[type="submit"]');
+            if (!btn) return;
+            if (!btn.dataset.defaultLabel) {
+              btn.dataset.defaultLabel = btn.textContent;
+            }
+            btn.disabled = !price.open;
+            btn.textContent = price.open
+              ? btn.dataset.defaultLabel
+              : "Registration closed";
+          });
+        });
+      }
+
+      async function loadAvailability() {
+        try {
+          var response = await fetch(MUK_CONFIG.availabilityUrl, {
+            method: "POST",
+            headers: { "X-MUK-API-Key": MUK_CONFIG.apiKey },
+            cache: "no-store",
+          });
+          var data = await response.json().catch(function () {
+            return {};
+          });
+          if (!response.ok || !data.availability) return;
+
+          var sym = data.availability.symposium;
+          var camp = data.availability.camp;
+          var symEl = document.getElementById("sym-seats-label");
+          var campEl = document.getElementById("camp-seats-label");
+          var copy = MUK_RUNTIME.copy || {};
+
+          if (symEl && sym) {
+            var symTemplate =
+              copy.seats_label_symposium ||
+              "{remaining} of {capacity} symposium places remaining";
+            symEl.textContent = symTemplate
+              .replace("{remaining}", sym.remaining)
+              .replace("{capacity}", sym.capacity);
+          }
+          if (campEl && camp) {
+            var campTemplate =
+              copy.seats_label_camp ||
+              "{remaining} of {capacity} training camp places remaining";
+            campEl.textContent = campTemplate
+              .replace("{remaining}", camp.remaining)
+              .replace("{capacity}", camp.capacity);
+          }
+        } catch (e) {
+          // Ignore availability errors on first paint.
+        }
+      }
+
+      async function loadPluginConfiguration() {
+        try {
+          var response = await fetch(MUK_CONFIG.configUrl, {
+            method: "POST",
+            headers: { "X-MUK-API-Key": MUK_CONFIG.apiKey },
+            cache: "no-store",
+          });
+          var data = await response.json().catch(function () { return {}; });
+          if (!response.ok || !data.price || !data.products) throw new Error("Configuration unavailable");
+          MUK_RUNTIME.price = data.price;
+          MUK_RUNTIME.products = data.products;
+          updatePriceLabels();
+          applyPageCopy(data.copy);
+          loadAvailability();
+        } catch (e) {
+          updatePriceLabels();
+        }
+      }
+
+      function applyPageCopy(copy) {
+        if (!copy) return;
+        MUK_RUNTIME.copy = copy;
+
+        var introEl = document.getElementById("intro-text");
+        if (introEl && copy.intro_text) introEl.textContent = copy.intro_text;
+
+        var symPromo = document.getElementById("sym-promo-section");
+        if (symPromo) symPromo.style.display = copy.show_symposium_promo === false ? "none" : "";
+
+        var symNote = document.getElementById("sym-stripe-note");
+        if (symNote && copy.stripe_note) symNote.textContent = copy.stripe_note;
+
+        var campNote = document.getElementById("camp-stripe-note");
+        if (campNote && copy.stripe_note) campNote.textContent = copy.stripe_note;
+      }
+
+      (function init() {
+        updatePriceLabels();
+        loadPluginConfiguration();
+        loadAvailability();
+        checkPaymentReturn();
+      })();
+    </script>
+  </body>
+</html>

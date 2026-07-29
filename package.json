@@ -1,0 +1,14 @@
+{
+  "name": "massuk-configuration",
+  "version": "1.0.0",
+  "description": "A small WordPress plugin that creates **Stripe Checkout Sessions** through a REST API. Configure test and live secret keys in wp-admin, switch modes, and call the endpoint from any button or frontend script.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:deploy": "rsync -a --delete --exclude='.git' --exclude='node_modules' --exclude='package.json' --exclude='package-lock.json' ./ /Users/mianmoiz/www/test/wp-content/plugins/massuk-configuration/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

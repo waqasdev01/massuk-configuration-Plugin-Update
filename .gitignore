@@ -1,0 +1,53 @@
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+/vendor/
+/node_modules/
+composer.lock
+package-lock.json
+yarn.lock
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Build / cache
+/dist/
+/build/
+*.cache
+.phpunit.result.cache
+.phpcs-cache
+
+# WordPress local clutter (if plugin folder is used in a full WP tree)
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+
+# Cursor / local tooling
+.cursor/
